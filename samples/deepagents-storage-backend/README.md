@@ -298,6 +298,7 @@ AZURE_STORAGE_MORTGAGE_SOURCE_PREFIX=MORT-2026-0042
 AZURE_STORAGE_MORTGAGE_OUTPUT_CONTAINER=mortgage-decisions
 AZURE_STORAGE_MORTGAGE_OUTPUT_PREFIX=demo-runs
 MORTGAGE_DEMO_TIMEOUT_SECONDS=55
+AZURE_CREDENTIAL_PROCESS_TIMEOUT_SECONDS=60
 ```
 
 The server creates one asynchronous `DefaultAzureCredential` per run and injects that
@@ -359,6 +360,11 @@ uv --system-certs run --env-file .env mortgage_demo.py
 ```
 
 Open [http://127.0.0.1:8001](http://127.0.0.1:8001) and select **Process packet**.
+
+If `DefaultAzureCredential` reports that `AzureCliCredential` timed out, confirm that
+`az account get-access-token --scope https://storage.azure.com/.default` succeeds in the
+same terminal, then restart the demo. The credential subprocess timeout defaults to 60
+seconds and can be adjusted with `AZURE_CREDENTIAL_PROCESS_TIMEOUT_SECONDS`.
 
 ### Resuming a workspace ([resume_workspace.py](resume_workspace.py))
 

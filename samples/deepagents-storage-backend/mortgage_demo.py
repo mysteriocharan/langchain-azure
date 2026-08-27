@@ -54,6 +54,7 @@ STAGE_OUTPUTS = (
     FINAL_DECISION,
 )
 DEFAULT_TIMEOUT_SECONDS = 55
+DEFAULT_CREDENTIAL_PROCESS_TIMEOUT_SECONDS = 60
 RUN_ID_PATTERN = re.compile(r"^[0-9]{8}-[0-9]{6}-[0-9a-f]{4}$")
 
 app = FastAPI(title="Mortgage Packet processing")
@@ -97,6 +98,20 @@ def _timeout_seconds() -> int:
     value = int(os.environ.get("MORTGAGE_DEMO_TIMEOUT_SECONDS", DEFAULT_TIMEOUT_SECONDS))
     if not 20 <= value <= 60:
         raise RuntimeError("MORTGAGE_DEMO_TIMEOUT_SECONDS must be between 20 and 60")
+    return value
+
+
+def _credential_process_timeout_seconds() -> int:
+    value = int(
+        os.environ.get(
+            "AZURE_CREDENTIAL_PROCESS_TIMEOUT_SECONDS",
+            DEFAULT_CREDENTIAL_PROCESS_TIMEOUT_SECONDS,
+        )
+    )
+    if not 15 <= value <= 120:
+        raise RuntimeError(
+            "AZURE_CREDENTIAL_PROCESS_TIMEOUT_SECONDS must be between 15 and 120"
+        )
     return value
 
 
@@ -483,8 +498,13 @@ async def _run_demo(
         timeoutSeconds=timeout_seconds,
     )
 
-    model_credential = DefaultAzureCredential(process_timeout=15)
-    blob_credential = AsyncDefaultAzureCredential(process_timeout=15)
+    credential_process_timeout = _credential_process_timeout_seconds()
+    model_credential = DefaultAzureCredential(
+        process_timeout=credential_process_timeout
+    )
+    blob_credential = AsyncDefaultAzureCredential(
+        process_timeout=credential_process_timeout
+    )
     async with AsyncExitStack() as stack:
         stack.callback(model_credential.close)
         stack.push_async_callback(blob_credential.close)
@@ -587,7 +607,9 @@ async def _preview_blob(
         raise HTTPException(status_code=400, detail="Invalid Blob path")
 
     account_url = _required_environment_variable("AZURE_STORAGE_ACCOUNT_URL")
-    credential = AsyncDefaultAzureCredential(process_timeout=15)
+    credential = AsyncDefaultAzureCredential(
+        process_timeout=_credential_process_timeout_seconds()
+    )
     async with AsyncExitStack() as stack:
         stack.push_async_callback(credential.close)
         backend = await stack.enter_async_context(
