@@ -1,0 +1,26 @@
+[
+  {
+    "id": "INC-1042",
+    "opened": "2026-08-19",
+    "site": "Phoenix",
+    "severity": "high",
+    "status": "open",
+    "summary": "Cycle count found repeated shortages in fast-moving packing materials."
+  },
+  {
+    "id": "INC-1047",
+    "opened": "2026-08-21",
+    "site": "Phoenix",
+    "severity": "medium",
+    "status": "investigating",
+    "summary": "Carrier pickup missed the scheduled evening window."
+  },
+  {
+    "id": "INC-1049",
+    "opened": "2026-08-22",
+    "site": "Dallas",
+    "severity": "low",
+    "status": "resolved",
+    "summary": "Two handheld scanners required battery replacement."
+  }
+]

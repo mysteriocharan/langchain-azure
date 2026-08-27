@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blob Agent Observatory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-block">
+      <span class="brand-mark" aria-hidden="true">
+        <span class="brand-core"></span>
+      </span>
+      <div>
+        <p class="eyebrow">LangChain Deep Agents / Azure Blob Storage</p>
+        <h1>Blob Agent Observatory</h1>
+      </div>
+    </div>
+    <div class="runtime-state" aria-live="polite">
+      <span id="status-dot" class="status-dot idle"></span>
+      <span id="run-status">Ready</span>
+      <span id="elapsed">00:00</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="control-band" aria-labelledby="review-heading">
+      <div class="control-copy">
+        <p class="eyebrow">Live Azure workflow</p>
+        <h2 id="review-heading">Fulfillment operations review</h2>
+        <p class="control-summary">Watch specialist agents inspect durable source data and return a cited report to Blob Storage.</p>
+      </div>
+      <form id="run-form" class="run-form">
+        <label for="prompt">Review request</label>
+        <textarea id="prompt" rows="3">Review the operational files in /source/. Use the specialist agents to identify threshold exceptions and active incidents, then write a cited report to /reports/operations-review.md.</textarea>
+        <button id="run-button" type="submit">Run review</button>
+      </form>
+      <div class="data-flow" aria-label="Data flow from Azure Blob Storage through Deep Agents and back to Blob Storage">
+        <div class="flow-node source-node">
+          <span class="node-type">INPUT</span>
+          <strong>Blob source</strong>
+          <span id="source-route">Loading...</span>
+        </div>
+        <span class="flow-link read-link" aria-hidden="true"><span class="flow-label">READ</span></span>
+        <div class="flow-node agent-node">
+          <span class="node-type">ORCHESTRATE</span>
+          <strong>Deep Agents</strong>
+          <span id="model-name">Loading...</span>
+        </div>
+        <span class="flow-link write-link" aria-hidden="true"><span class="flow-label">WRITE</span></span>
+        <div class="flow-node output-node">
+          <span class="node-type">OUTPUT</span>
+          <strong>Blob reports</strong>
+          <span id="report-route">Loading...</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="workbench" aria-label="Agent execution workbench">
+      <aside class="source-pane pane">
+        <div class="pane-heading">
+          <div>
+            <p class="eyebrow">Azure Blob Storage</p>
+            <h2>Source files</h2>
+          </div>
+          <span id="source-count" class="count-badge">0</span>
+        </div>
+        <div id="source-files" class="file-list">
+          <p class="empty-state">Run the review to inventory the source prefix.</p>
+        </div>
+      </aside>
+
+      <section class="trace-pane pane" aria-labelledby="trace-heading">
+        <div class="pane-heading trace-heading">
+          <div>
+            <p class="eyebrow">Observable execution</p>
+            <h2 id="trace-heading">Agent activity</h2>
+          </div>
+          <span id="event-count" class="count-badge">0 steps</span>
+        </div>
+        <div id="agent-strip" class="agent-strip" aria-label="Agent status">
+          <span class="agent-pill pending" data-agent="coordinator">Coordinator</span>
+          <span class="agent-pill pending" data-agent="metrics-analyst">Metrics analyst</span>
+          <span class="agent-pill pending" data-agent="incident-analyst">Incident analyst</span>
+          <span class="agent-pill pending" data-agent="report-writer">Report writer</span>
+        </div>
+        <ol id="timeline" class="timeline" aria-live="polite">
+          <li class="timeline-empty">No run events yet.</li>
+        </ol>
+      </section>
+
+      <aside class="artifact-pane pane">
+        <div class="pane-heading">
+          <div>
+            <p class="eyebrow">Durable output</p>
+            <h2>Blob artifacts</h2>
+          </div>
+          <span id="artifact-count" class="count-badge">0</span>
+        </div>
+        <div id="artifacts" class="artifact-list">
+          <p class="empty-state">Verified files will appear as agents write them.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section id="report-section" class="report-band" hidden>
+      <div class="report-meta">
+        <div>
+          <p class="eyebrow">Final artifact</p>
+          <h2>Operations review</h2>
+        </div>
+        <a id="report-url" href="#" target="_blank" rel="noreferrer">Blob URL</a>
+      </div>
+      <article id="report-content" class="report-content"></article>
+    </section>
+  </main>
+
+  <dialog id="preview-dialog" class="preview-dialog">
+    <div class="dialog-heading">
+      <div>
+        <p class="eyebrow">Server-authenticated preview</p>
+        <h2 id="preview-title">Source file</h2>
+      </div>
+      <button id="close-preview" class="close-button" type="button" aria-label="Close preview" title="Close">X</button>
+    </div>
+    <pre id="preview-content"></pre>
+  </dialog>
+
+  <script src="/assets/app.js" defer></script>
+</body>
+</html>
